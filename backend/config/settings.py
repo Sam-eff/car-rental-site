@@ -72,7 +72,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [REACT_BUILD_DIR] if REACT_BUILD_DIR.exists() else [],
+        'DIRS': [], # [REACT_BUILD_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
