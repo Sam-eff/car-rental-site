@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
+from cloudinary.models import CloudinaryField
 
 
 # Create your models here.
@@ -32,7 +33,7 @@ class Feature(models.Model):
     
 class Brand(models.Model):
     name = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='cars/brand/')
+    image = CloudinaryField('image', folder='cars/related/')
     
     class Meta:
         ordering = ['name']
@@ -50,7 +51,7 @@ class Car(models.Model):
     description = models.TextField()
     transmission = models.CharField(max_length=255, choices=Transmission)
     fuel_type = models.CharField(max_length=255, choices=FuelType)
-    image= models.ImageField(upload_to='cars/', blank=True, null=True)
+    image = CloudinaryField('image', folder='cars/', blank=True, null=True)
     color = models.CharField(max_length=255, blank=True)
     license_plate = models.CharField(max_length=255, blank=True)
     features = models.ManyToManyField(Feature, related_name='cars')
@@ -83,7 +84,7 @@ class Car(models.Model):
 
 class CarImage(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='cars/related/')
+    image = CloudinaryField('image', folder='cars/related/')
     caption = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
