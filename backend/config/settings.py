@@ -253,11 +253,13 @@ cloudinary.config(
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
-# Debug template settings
+
+# DEBUG: Print Cloudinary config (temporary)
 import sys
-print("=" * 50, file=sys.stderr)
-print("TEMPLATES CONFIG:", file=sys.stderr)
-print(f"DIRS: {TEMPLATES[0]['DIRS']}", file=sys.stderr)
-print(f"APP_DIRS: {TEMPLATES[0]['APP_DIRS']}", file=sys.stderr)
-print(f"INSTALLED_APPS: {INSTALLED_APPS}", file=sys.stderr)
-print("=" * 50, file=sys.stderr)
+print("=" * 60, file=sys.stderr)
+print("CLOUDINARY CONFIGURATION:", file=sys.stderr)
+print(f"Cloud Name: {CLOUDINARY_STORAGE.get('CLOUD_NAME')}", file=sys.stderr)
+print(f"API Key: {CLOUDINARY_STORAGE.get('API_KEY')[:5]}..." if CLOUDINARY_STORAGE.get('API_KEY') else "API Key: NOT SET", file=sys.stderr)
+print(f"API Secret: {'SET' if CLOUDINARY_STORAGE.get('API_SECRET') else 'NOT SET'}", file=sys.stderr)
+print(f"DEFAULT_FILE_STORAGE: {DEFAULT_FILE_STORAGE}", file=sys.stderr)
+print("=" * 60, file=sys.stderr)
