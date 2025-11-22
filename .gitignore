@@ -1,46 +1,15 @@
-# Python
-__pycache__/
-*.py[cod]
-*.pyc
-*.pyo
-*.log
-
-# Django
-db.sqlite3
-db.sqlite3-journal
-/media/
-/staticfiles/
-
-# Environment - IMPORTANT!
+# Environment
 .env
 .env.*
 !.env.example
 
-# Virtual environment
-venv/
-env/
-ENV/
-appenv/
+# Python
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
 
 # IDE
+.DS_Store
 .vscode/
-.idea/
-*.swp
-.DS_Store
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-
-# Misc
-*.bak
-*.tmp
-.cache/
