@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
+const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+
 const AdminDashboard = () => {
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -292,7 +294,7 @@ const AdminDashboard = () => {
                             <h2 className='text-2xl font-bold mb-6'>Car Management</h2>
                             <p className='text-gray-400'>
                                 Use the Django admin panel to manage cars: 
-                                <a href='http://127.0.0.1:8000/admin' target='_blank' rel='noopener noreferrer' className='text-blue-400 hover:underline ml-2'>
+                                <a href={`${API_URL}/admin`} target='_blank' rel='noopener noreferrer' className='text-blue-400 hover:underline ml-2'>
                                     Open Admin Panel →
                                 </a>
                             </p>
@@ -306,7 +308,7 @@ const AdminDashboard = () => {
                             <p className='text-gray-400 mb-4'>Total registered users: {stats.overview.total_users}</p>
                             <p className='text-gray-400'>
                                 Use the Django admin panel to manage users: 
-                                <a href='http://127.0.0.1:8000/admin' target='_blank' rel='noopener noreferrer' className='text-blue-400 hover:underline ml-2'>
+                                <a href={`${API_URL}/admin`} target='_blank' rel='noopener noreferrer' className='text-blue-400 hover:underline ml-2'>
                                     Open Admin Panel →
                                 </a>
                             </p>
