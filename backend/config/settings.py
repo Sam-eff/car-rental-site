@@ -67,6 +67,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -82,6 +84,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
@@ -223,3 +226,13 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@autohire.com'
 
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default='')
 STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY', default='')
+
+
+# Debug template settings
+import sys
+print("=" * 50, file=sys.stderr)
+print("TEMPLATES CONFIG:", file=sys.stderr)
+print(f"DIRS: {TEMPLATES[0]['DIRS']}", file=sys.stderr)
+print(f"APP_DIRS: {TEMPLATES[0]['APP_DIRS']}", file=sys.stderr)
+print(f"INSTALLED_APPS: {INSTALLED_APPS}", file=sys.stderr)
+print("=" * 50, file=sys.stderr)
