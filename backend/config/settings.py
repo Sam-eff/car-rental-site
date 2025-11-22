@@ -254,12 +254,3 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 
-# DEBUG: Print Cloudinary config (temporary)
-import sys
-print("=" * 60, file=sys.stderr)
-print("CLOUDINARY CONFIGURATION:", file=sys.stderr)
-print(f"Cloud Name: {CLOUDINARY_STORAGE.get('CLOUD_NAME')}", file=sys.stderr)
-print(f"API Key: {CLOUDINARY_STORAGE.get('API_KEY')[:5]}..." if CLOUDINARY_STORAGE.get('API_KEY') else "API Key: NOT SET", file=sys.stderr)
-print(f"API Secret: {'SET' if CLOUDINARY_STORAGE.get('API_SECRET') else 'NOT SET'}", file=sys.stderr)
-print(f"DEFAULT_FILE_STORAGE: {DEFAULT_FILE_STORAGE}", file=sys.stderr)
-print("=" * 60, file=sys.stderr)
