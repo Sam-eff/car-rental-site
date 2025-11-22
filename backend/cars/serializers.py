@@ -7,14 +7,28 @@ class FeatureSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
         
 class BrandSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
     class Meta:
+        
         model = Brand
         fields = ['id', 'name', 'image']
         
+    def get_image(self, obj):
+        if obj.image:
+            return obj.image.url  # This gets the full Cloudinary URL
+        return None
+        
 class CarImageSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+    
     class Meta:
         model = CarImage
         fields = ['id', 'image']
+        
+    def get_image(self, obj):
+        if obj.image:
+            return obj.image.url  # Full Cloudinary URL
+        return None
 
 class CarSerializer(serializers.ModelSerializer):
     features = FeatureSerializer(many=True, read_only=True)
@@ -22,10 +36,16 @@ class CarSerializer(serializers.ModelSerializer):
     images = CarImageSerializer(many=True, read_only=True)
     average_rating = serializers.ReadOnlyField()
     review_count = serializers.ReadOnlyField()  
+    image = serializers.SerializerMethodField()
     
     class Meta:
         model = Car
         fields = '__all__'
+        
+    def get_image(self, obj):
+        if obj.image:
+            return obj.image.url  # Full Cloudinary URL
+        return None
         
 
 
