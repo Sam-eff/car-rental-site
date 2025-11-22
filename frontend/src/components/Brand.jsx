@@ -25,7 +25,7 @@ const Brand = () => {
     }
 
     return (
-        <div className='py-20 px-4 md:px-16'>
+        <div className='py-14 px-4 md:px-16'>
             {/* Section Header */}
             <div className='text-center mb-16'>
                 <h2 className='text-4xl font-bold text-white mb-4'>Choose by Brand</h2>

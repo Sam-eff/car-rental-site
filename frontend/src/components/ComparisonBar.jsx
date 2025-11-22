@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { ComparisonContext } from '../context/ComparisonContext';
 import { useNavigate } from 'react-router-dom';
 import { X, GitCompare } from 'lucide-react';
+import { getImageUrl } from '../utils/Imagehelper';
+
 
 const ComparisonBar = () => {
     const { comparisonList, removeFromComparison, clearComparison } = useContext(ComparisonContext);
@@ -28,11 +30,7 @@ const ComparisonBar = () => {
                                     className='relative bg-gray-800 rounded-lg p-2 flex items-center gap-2 border border-gray-700'
                                 >
                                     <img
-                                        src={
-                                            car.image?.startsWith('http')
-                                                ? car.image
-                                                : `http://127.0.0.1:8000${car.image}`
-                                        }
+                                        src={getImageUrl(car.image)}
                                         alt={car.name}
                                         className='w-16 h-12 object-cover rounded'
                                     />

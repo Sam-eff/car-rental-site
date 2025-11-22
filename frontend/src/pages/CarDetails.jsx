@@ -176,7 +176,7 @@ const CarDetails = () => {
           <div className="mb-8 mt-8">
             <Link to="/cars">
               <button className="text-white text-sm flex items-center hover:text-blue-400 transition-colors">
-                <ArrowLeft className="w-5 h-5 mr-2" /> Back to Cars
+                <ArrowLeft className="w-5 h-5 mr-2 md:block" /> Back to Cars
               </button>
             </Link>
           </div>

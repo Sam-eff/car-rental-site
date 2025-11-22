@@ -24,7 +24,7 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <div className='py-20 px-4 md:px-16 bg-gradient-to-b from-black to-gray-900'>
+    <div className='py-14 px-4 md:px-16 bg-gradient-to-b from-black to-gray-900'>
         <div className='text-center mb-16'>
             <h2 className='text-4xl md:text-5xl font-bold text-white mb-4'>How It Works</h2>
             <p className='text-gray-400 text-lg'>Get started in three simple steps</p>

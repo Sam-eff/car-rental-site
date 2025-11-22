@@ -22,11 +22,11 @@ const Carlist = () => {
 
 
   return (
-    <div className='py-20 px-4 text-white'>
+    <div className='py-12 px-4 text-white'>
         <div className='mb-10'>
             <h2 className='text-4xl font-medium font-poppins'>Select a Car</h2>
         </div>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {featuredCars.map((car) => (
                  <div key={car.id} className='relative'>
                   <Link to={`/cars/${car.id}`}>
