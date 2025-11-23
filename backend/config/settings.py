@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 REACT_BUILD_DIR = BASE_DIR / 'frontend' / 'dist'
 
 MIDDLEWARE = [
+    'config.cors_middleware.CorsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
