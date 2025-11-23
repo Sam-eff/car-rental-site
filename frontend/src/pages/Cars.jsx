@@ -397,9 +397,11 @@ const Cars = () => {
                             </p>
                             <p className='text-sm text-gray-500'>per day</p>
                           </div>
+                          <Link to={`/cars/${car.id}`}>
                           <button className='px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors'>
                             View Details
                           </button>
+                          </Link>
                         </div>
                       </div>
                     </div>

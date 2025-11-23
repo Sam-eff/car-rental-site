@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Send, User, AlertCircle, Phone, MapPin, Clock, MessageSquare } from 'lucide-react';
+import { contactApi } from '../store/api';
 
 
 const Contact = () => {
@@ -25,30 +26,28 @@ const Contact = () => {
         e.preventDefault();
         setError('');
         setSuccess(false);
-
+    
         // Validate
         if (!formData.name || !formData.email || !formData.message) {
             setError('Please fill in all required fields');
             return;
         }
-
+    
         if (!formData.email.includes('@') || !formData.email.includes('.')) {
             setError('Please enter a valid email address');
             return;
         }
-
+    
         if (formData.message.length < 10) {
             setError('Message must be at least 10 characters');
             return;
         }
-
+    
         setLoading(true);
-
-        // Simulate sending (later we'll add real email functionality)
-        setTimeout(() => {
-            console.log('Contact form submitted:', formData);
+    
+        try {
+            const response = await contactApi.sendMessage(formData);
             setSuccess(true);
-            setLoading(false);
             // Reset form
             setFormData({
                 name: '',
@@ -56,10 +55,14 @@ const Contact = () => {
                 subject: '',
                 message: ''
             });
-
+            
             // Hide success message after 5 seconds
             setTimeout(() => setSuccess(false), 5000);
-        }, 1000);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to send message. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const contactInfo = [

@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Car, Feature, CarImage, Brand, Booking, Review, Wishlist
+from .models import Car, Feature, CarImage, Brand, Booking, Review, Wishlist, ContactMessage, Newsletter
 
 @admin.register(Car)
 class CarAdmin(admin.ModelAdmin):
@@ -32,3 +32,16 @@ class ReviewAdmin(admin.ModelAdmin):
 @admin.register(Wishlist)
 class WishlistAdmin(admin.ModelAdmin):
     list_display = ('user', 'car')
+    
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ['name', 'email', 'subject', 'created_at', 'is_read']
+    list_filter = ['is_read', 'created_at']
+    search_fields = ['name', 'email', 'subject', 'message']
+    readonly_fields = ['created_at']
+
+@admin.register(Newsletter)
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display = ['email', 'subscribed_at', 'is_active']
+    list_filter = ['is_active', 'subscribed_at']
+    search_fields = ['email']

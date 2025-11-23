@@ -1,4 +1,4 @@
-from .models import Car, Feature, Brand, CarImage, Booking, Review, Wishlist
+from .models import Car, Feature, Brand, CarImage, Booking, Review, Wishlist, ContactMessage, Newsletter
 from rest_framework import serializers
 
 class FeatureSerializer(serializers.ModelSerializer):
@@ -100,3 +100,17 @@ class WishlistSerializer(serializers.ModelSerializer):
         model = Wishlist
         fields = ['id', 'user', 'car', 'car_id', 'created_at']
         read_only_fields = ['user', 'created_at']
+        
+        
+class ContactMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactMessage
+        fields = ['id', 'name', 'email', 'subject', 'message', 'created_at']
+        read_only_fields = ['created_at']
+
+
+class NewsletterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Newsletter
+        fields = ['id', 'email', 'subscribed_at']
+        read_only_fields = ['subscribed_at']

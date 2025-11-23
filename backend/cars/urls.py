@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import CarViewSet, FeatureViewSet, BrandViewSet, BookingViewSet, ReviewViewSet, WishlistViewSet
-from . import payments, admin_views
+from . import payments, admin_views, views
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -13,6 +13,9 @@ router.register(r'wishlist', WishlistViewSet, basename='wishlist')
 
 urlpatterns = [
     path('', include(router.urls)),
+    
+    path('contact/', views.contact_message, name='contact-message'),
+    path('newsletter/', views.newsletter_subscribe, name='newsletter-subscribe'),
     
     # payment endpoints
     path('payments/create-checkout-session/', payments.create_checkout_session, name='create_checkout_session'),

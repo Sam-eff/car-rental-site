@@ -2,13 +2,15 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework import viewsets, status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from django.db.models import Q
+from django.core.mail import send_mail
+from django.conf import settings
 from datetime import datetime
-from .serializers import CarSerializer, FeatureSerializer, BrandSerializer, BookingSerializer, ReviewSerializer, WishlistSerializer
-from .models import Car, Feature, Brand, Booking, Review, Wishlist
+from .serializers import CarSerializer, FeatureSerializer, BrandSerializer, BookingSerializer, ReviewSerializer, WishlistSerializer, ContactMessageSerializer, NewsletterSerializer
+from .models import Car, Feature, Brand, Booking, Review, Wishlist, ContactMessage, Newsletter
 from .emails import send_booking_confirmation_email, send_booking_cancellation_email 
 
 
@@ -205,3 +207,78 @@ class WishlistViewSet(viewsets.ModelViewSet):
             return Response({
                 'error': 'Car not in wishlist'
             }, status=status.HTTP_404_NOT_FOUND)
+            
+            
+            
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def contact_message(request):
+    """Handle contact form submissions"""
+    serializer = ContactMessageSerializer(data=request.data)
+    
+    if serializer.is_valid():
+        contact = serializer.save()
+        
+        # Send email to admin
+        try:
+            send_mail(
+                subject=f'New Contact Message: {contact.subject}',
+                message=f'From: {contact.name} ({contact.email})\n\nMessage:\n{contact.message}',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.EMAIL_HOST_USER],
+                fail_silently=False,
+            )
+            
+            # Send confirmation email to user
+            send_mail(
+                subject='We received your message!',
+                message=f'Hi {contact.name},\n\nThank you for contacting AutoHire. We have received your message and will get back to you soon.\n\nBest regards,\nAutoHire Team',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[contact.email],
+                fail_silently=False,
+            )
+        except Exception as e:
+            print(f"Email error: {e}")
+        
+        return Response({
+            'message': 'Thank you for your message! We will get back to you soon.'
+        }, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def newsletter_subscribe(request):
+    """Handle newsletter subscriptions"""
+    serializer = NewsletterSerializer(data=request.data)
+    
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        
+        # Check if already subscribed
+        if Newsletter.objects.filter(email=email).exists():
+            return Response({
+                'message': 'This email is already subscribed to our newsletter.'
+            }, status=status.HTTP_200_OK)
+        
+        newsletter = serializer.save()
+        
+        # Send welcome email
+        try:
+            send_mail(
+                subject='Welcome to AutoHire Newsletter!',
+                message=f'Thank you for subscribing to AutoHire newsletter!\n\nYou will receive updates about our latest cars, special offers, and news.\n\nBest regards,\nAutoHire Team',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+                fail_silently=False,
+            )
+        except Exception as e:
+            print(f"Email error: {e}")
+        
+        return Response({
+            'message': 'Successfully subscribed to our newsletter!'
+        }, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

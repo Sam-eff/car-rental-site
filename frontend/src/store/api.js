@@ -76,6 +76,14 @@ export const wishlistApi = {
     removeByCarId: (carId) => api.delete(`/wishlist/remove_by_car/?car_id=${carId}`),
 };
 
+export const contactApi = {
+    sendMessage: (data) => api.post("/contact/", data),
+};
+
+export const newsletterApi = {
+    subscribe: (email) => api.post("/newsletter/", { email }),
+};
+
 export const adminApi = {
     getStats: () => api.get("/admin/stats/"),
     getAllBookings: (filters) => api.get("/admin/bookings/", { params: filters }),
