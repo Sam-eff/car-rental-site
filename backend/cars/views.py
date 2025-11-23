@@ -211,40 +211,35 @@ class WishlistViewSet(viewsets.ModelViewSet):
             
             
 
+import logging
+logger = logging.getLogger(__name__)
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def contact_message(request):
-    """Handle contact form submissions"""
+    logger.error("=" * 50)
+    logger.error("CONTACT ENDPOINT HIT!")
+    logger.error(f"Request data: {request.data}")
+    logger.error("=" * 50)
+    
     serializer = ContactMessageSerializer(data=request.data)
     
     if serializer.is_valid():
-        contact = serializer.save()
-        
-        # Send email to admin
         try:
-            send_mail(
-                subject=f'New Contact Message: {contact.subject}',
-                message=f'From: {contact.name} ({contact.email})\n\nMessage:\n{contact.message}',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.EMAIL_HOST_USER],
-                fail_silently=False,
-            )
+            contact = serializer.save()
+            logger.error(f"Contact saved: {contact.id}")
             
-            # Send confirmation email to user
-            send_mail(
-                subject='We received your message!',
-                message=f'Hi {contact.name},\n\nThank you for contacting AutoHire. We have received your message and will get back to you soon.\n\nBest regards,\nAutoHire Team',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[contact.email],
-                fail_silently=False,
-            )
+            # Comment out email for now
+            # send_mail(...)
+            
+            return Response({
+                'message': 'Thank you for your message! We will get back to you soon.'
+            }, status=status.HTTP_201_CREATED)
         except Exception as e:
-            print(f"Email error: {e}")
-        
-        return Response({
-            'message': 'Thank you for your message! We will get back to you soon.'
-        }, status=status.HTTP_201_CREATED)
+            logger.error(f"Error saving contact: {e}")
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+    logger.error(f"Validation errors: {serializer.errors}")
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
