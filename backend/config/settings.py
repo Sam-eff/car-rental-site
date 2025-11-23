@@ -174,13 +174,36 @@ if DEBUG:
 else:
     CORS_ALLOWED_ORIGINS = config(
         'CORS_ALLOWED_ORIGINS',
-        default='https://your-frontend.netlify.app',
+        default='https://auto-hire.netlify.app',
         cast=lambda v: [s.strip() for s in v.split(',')]
     )
     
 
 # CORS settings (not needed for single server, but useful for development)
 CORS_ALLOW_CREDENTIALS = True
+
+# Add these additional CORS settings:
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
 
 # CSRF Settings
 CSRF_TRUSTED_ORIGINS = config(
