@@ -60,6 +60,10 @@ const Contact = () => {
             setTimeout(() => setSuccess(false), 5000);
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to send message. Please try again.');
+            console.log('Full error:', err);
+            console.log('Response:', err.response);
+            console.log('Status:', err.response?.status);
+            console.log('Data:', err.response?.data);
         } finally {
             setLoading(false);
         }
