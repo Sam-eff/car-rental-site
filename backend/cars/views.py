@@ -12,6 +12,8 @@ from datetime import datetime
 from .serializers import CarSerializer, FeatureSerializer, BrandSerializer, BookingSerializer, ReviewSerializer, WishlistSerializer, ContactMessageSerializer, NewsletterSerializer
 from .models import Car, Feature, Brand, Booking, Review, Wishlist, ContactMessage, Newsletter
 from .emails import send_booking_confirmation_email, send_booking_cancellation_email 
+import logging
+logger = logging.getLogger(__name__)
 
 
 class CarViewSet(viewsets.ModelViewSet):
@@ -209,44 +211,52 @@ class WishlistViewSet(viewsets.ModelViewSet):
             }, status=status.HTTP_404_NOT_FOUND)
             
             
-            
-
-import logging
-logger = logging.getLogger(__name__)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def contact_message(request):
-    logger.error("=" * 50)
-    logger.error("CONTACT ENDPOINT HIT!")
-    logger.error(f"Request data: {request.data}")
-    logger.error("=" * 50)
-    
     serializer = ContactMessageSerializer(data=request.data)
     
     if serializer.is_valid():
+        contact = serializer.save()
+        
+        # Send emails
         try:
-            contact = serializer.save()
-            logger.error(f"Contact saved: {contact.id}")
+            # Email to admin
+            send_mail(
+                subject=f'New Contact Message: {contact.subject}',
+                message=f'From: {contact.name} ({contact.email})\n\nMessage:\n{contact.message}',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.EMAIL_HOST_USER],
+                fail_silently=False,
+            )
             
-            # Comment out email for now
-            # send_mail(...)
-            
-            return Response({
-                'message': 'Thank you for your message! We will get back to you soon.'
-            }, status=status.HTTP_201_CREATED)
+            # Confirmation email to user
+            send_mail(
+                subject='We received your message!',
+                message=f'Hi {contact.name},\n\nThank you for contacting AutoHire. We have received your message and will get back to you soon.\n\nBest regards,\nAutoHire Team',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[contact.email],
+                fail_silently=True,  # Don't fail if user email is invalid
+            )
         except Exception as e:
-            logger.error(f"Error saving contact: {e}")
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            logger.warning(f"Email error: {e}")
+            # Still return success even if email fails
+        
+        return Response({
+            'message': 'Thank you for your message! We will get back to you soon.'
+        }, status=status.HTTP_201_CREATED)
     
-    logger.error(f"Validation errors: {serializer.errors}")
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def newsletter_subscribe(request):
-    """Handle newsletter subscriptions"""
+    logger.error("=" * 50)
+    logger.error("NEWSLETTER ENDPOINT HIT!")
+    logger.error(f"Request data: {request.data}")
+    logger.error("=" * 50)
+    
     serializer = NewsletterSerializer(data=request.data)
     
     if serializer.is_valid():
@@ -258,22 +268,29 @@ def newsletter_subscribe(request):
                 'message': 'This email is already subscribed to our newsletter.'
             }, status=status.HTTP_200_OK)
         
-        newsletter = serializer.save()
-        
-        # Send welcome email
         try:
-            send_mail(
-                subject='Welcome to AutoHire Newsletter!',
-                message=f'Thank you for subscribing to AutoHire newsletter!\n\nYou will receive updates about our latest cars, special offers, and news.\n\nBest regards,\nAutoHire Team',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=False,
-            )
+            newsletter = serializer.save()
+            logger.error(f"Newsletter saved: {newsletter.id}")
+            
+            # Send welcome email (optional)
+            try:
+                send_mail(
+                    subject='Welcome to AutoHire Newsletter!',
+                    message='Thank you for subscribing!',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email],
+                    fail_silently=True,
+                )
+            except Exception as e:
+                logger.warning(f"Email error: {e}")
+            
+            return Response({
+                'message': 'Successfully subscribed to our newsletter!'
+            }, status=status.HTTP_201_CREATED)
+            
         except Exception as e:
-            print(f"Email error: {e}")
-        
-        return Response({
-            'message': 'Successfully subscribed to our newsletter!'
-        }, status=status.HTTP_201_CREATED)
+            logger.error(f"Error saving newsletter: {e}")
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+    logger.error(f"Validation errors: {serializer.errors}")
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
