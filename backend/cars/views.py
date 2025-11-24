@@ -220,29 +220,6 @@ def contact_message(request):
     if serializer.is_valid():
         contact = serializer.save()
         
-        # Send emails
-        # try:
-        #     # Email to admin
-        #     send_mail(
-        #         subject=f'New Contact Message: {contact.subject}',
-        #         message=f'From: {contact.name} ({contact.email})\n\nMessage:\n{contact.message}',
-        #         from_email=settings.DEFAULT_FROM_EMAIL,
-        #         recipient_list=[settings.EMAIL_HOST_USER],
-        #         fail_silently=False,
-        #     )
-            
-        #     # Confirmation email to user
-        #     send_mail(
-        #         subject='We received your message!',
-        #         message=f'Hi {contact.name},\n\nThank you for contacting AutoHire. We have received your message and will get back to you soon.\n\nBest regards,\nAutoHire Team',
-        #         from_email=settings.DEFAULT_FROM_EMAIL,
-        #         recipient_list=[contact.email],
-        #         fail_silently=True,  # Don't fail if user email is invalid
-        #     )
-        # except Exception as e:
-        #     logger.warning(f"Email error: {e}")
-            # Still return success even if email fails
-        
         return Response({
             'message': 'Thank you for your message! We will get back to you soon.'
         }, status=status.HTTP_201_CREATED)
@@ -265,20 +242,6 @@ def newsletter_subscribe(request):
         
         # Save first
         newsletter = serializer.save()
-        
-        # Try to send email but don't crash if it fails
-        # try:
-        #     send_mail(
-        #         subject='Welcome to AutoHire Newsletter!',
-        #         message='Thank you for subscribing to AutoHire newsletter!\n\nYou will receive updates about our latest cars, special offers, and news.\n\nBest regards,\nAutoHire Team',
-        #         from_email=settings.DEFAULT_FROM_EMAIL,
-        #         recipient_list=[email],
-        #         fail_silently=True,
-        #     )
-        # except Exception as e:
-        #     # Log but don't fail the request
-        #     logger.warning(f"Email sending failed: {e}")
-        #     pass
         
         # Always return success if saved
         return Response({
